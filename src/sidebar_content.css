@@ -1,0 +1,41 @@
+@import 'http://weloveiconfonts.com/api/?family=fontawesome';
+[class*="fontawesome-"]:before {
+    font-family: 'fontawesome', sans-serif;
+}
+
+.cat, .diff, .date, .fav, .ans {
+	font-size: 25px;
+}
+
+.startDate {
+	margin-right: 5px;
+	width: 137px;
+}
+
+.endDate {
+	margin-left: 5px;
+	width: 137px;
+}
+
+.loadAllText {
+	font-family: Roboto;
+	font-size: 1.1 rem;
+}
+
+.loadAllButton {
+	text-align: center;
+}
+
+.loadButton {
+	background-color: #add8e6;
+	border: none;
+	color: white;
+	width: 225px;
+	padding: 20px;
+	margin-top: 10px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 4px;
+}

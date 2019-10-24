@@ -1,22 +1,28 @@
-.App {
+/*.header {
   text-align: center;
+}*/
+.title {
+  margin-right: 5rem;
+}
+#react-paginate {
+	text-align: center;
+}
+#react-paginate ul {
+	display: inline-block;
 }
 
-.App-logo {
-  height: 40vmin;
+#react-paginate li {
+	display: inline-block;	
+	padding: 8px 2px;
+	border: 1px solid #ddd;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+#react-paginate a {
+	padding: 8px 16px;
 }
 
-.App-link {
-  color: #09d3ac;
+#react-paginate .active {
+	background-color: #29a5ce;
+	color: white;
+
 }
