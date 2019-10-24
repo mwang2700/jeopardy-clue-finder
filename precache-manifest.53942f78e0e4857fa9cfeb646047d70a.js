@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2ea6360da39b8dfbf404751188b4551c",
+    "revision": "c0f8a03c4e865850d39da2038a9d663d",
     "url": "/jeopardy-clue-finder/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/jeopardy-clue-finder/static/css/2.d5f11bc3.chunk.css"
   },
   {
-    "revision": "691f8aa85dde616e29ca",
+    "revision": "f94538e136dee3cd32a3",
     "url": "/jeopardy-clue-finder/static/css/main.95a2ebeb.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/jeopardy-clue-finder/static/js/2.5545af1c.chunk.js"
   },
   {
-    "revision": "691f8aa85dde616e29ca",
-    "url": "/jeopardy-clue-finder/static/js/main.0a5c6362.chunk.js"
+    "revision": "f94538e136dee3cd32a3",
+    "url": "/jeopardy-clue-finder/static/js/main.958065b9.chunk.js"
   },
   {
     "revision": "8a8ca1ea53304ec121ed",
