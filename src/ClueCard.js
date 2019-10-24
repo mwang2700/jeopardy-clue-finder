@@ -68,7 +68,7 @@ const Background = styled.div({
   width: cardWidth.toString() + "px",
   height: "425px",
   cursor: "pointer",
-  backgroundImage: "url(/lightblue.jpg)",
+  backgroundImage: "url(/lightblue.JPG)",
   [`:hover ${DisplayOver}`]: {
     backgroundColor: "rgba(0,0,0,.5)",
   },
