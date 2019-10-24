@@ -204,7 +204,6 @@ class App extends Component {
           // }
 
           if (Object.keys(query.params).length !== 0) {
-            console.log("succ");
             this.fetchCards(query);
             this.setState({
               useFiltered: 1
