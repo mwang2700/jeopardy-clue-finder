@@ -5,7 +5,7 @@ import Pagination from 'react-paginate';
 import SidebarContent from './sidebar_content';
 import SearchBox from './SearchBox';
 import MaterialTitlePanel from './material_title_panel';
-import ClueCard from './ClueCard';
+import CardList from './CardList';
 import './App.css';
 
 
@@ -44,6 +44,8 @@ class App extends Component {
       itemsPerPage: 10,
       useFiltered: 0
     };
+
+    this.diffFilteredCards = [];
 
     this.fetchCategories = this.fetchCategories.bind(this);
     this.fetchAllCards = this.fetchAllCards.bind(this);
@@ -90,14 +92,14 @@ class App extends Component {
             if (data[i].category !== undefined) {
               let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
               cards.push(
-                <ClueCard
-                  key = {offset+i}
-                  clue = {data[i].question}
-                  category = {data[i].category.title}
-                  difficulty = {data[i].value}
-                  answer = {removedTags}
-                  airDate = {data[i].airdate}
-                />
+                {
+                  key: data[i].id,
+                  clue: data[i].question,
+                  category: data[i].category.title,
+                  difficulty: data[i].value,
+                  answer: removedTags,
+                  airDate: data[i].airdate
+                }
               );
             }
           }
@@ -112,7 +114,7 @@ class App extends Component {
 
   fetchInitialCards(offset) {
     let cards = [];
-    axios.get('http://jservice.io/api/clues?offset=' + offset)
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
       .then((response) => {
         let data = response.data;
         if (offset <= 2400) {
@@ -120,14 +122,14 @@ class App extends Component {
             if (data[i].category !== undefined) {
               let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
               cards.push(
-                <ClueCard
-                  key = {offset+i}
-                  clue = {data[i].question}
-                  category = {data[i].category.title}
-                  difficulty = {data[i].value}
-                  answer = {removedTags}
-                  airDate = {data[i].airdate}
-                />
+                {
+                  key: data[i].id,
+                  clue: data[i].question,
+                  category: data[i].category.title,
+                  difficulty: data[i].value,
+                  answer: removedTags,
+                  airDate: data[i].airdate
+                }
               );
             }
           }
@@ -140,7 +142,7 @@ class App extends Component {
     });
   }
 
-  fetchCards(query) {
+  async fetchCards(query) {
     let cards = [];
     axios.get('http://jservice.io/api/clues', query)
       .then((response) => {
@@ -148,14 +150,14 @@ class App extends Component {
         for (let i = 0; i < data.length; i++) {
           let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
           cards.push(
-            <ClueCard
-              key = {i}
-              clue = {data[i].question}
-              category = {data[i].category.title}
-              difficulty = {data[i].value}
-              answer = {removedTags}
-              airDate = {data[i].airdate}
-            />
+            {
+              key: data[i].id,
+              clue: data[i].question,
+              category: data[i].category.title,
+              difficulty: data[i].value,
+              answer: removedTags,
+              airDate: data[i].airdate
+            } 
           );
         }
         this.setState({
@@ -167,6 +169,7 @@ class App extends Component {
   queryChanged(catId, dateS, dateE, difficulty, difficultyfield) {
     setTimeout(
       function() {
+          this.diffFilteredCards = [];
           let query = {
             params: {}
           };
@@ -183,7 +186,6 @@ class App extends Component {
                              0,
                              0);
             query.params.min_date = s;
-            console.log(s.toJSON());
           }
           let dateEnd = this.state.dateEnd;
           if (dateEnd !== '') {
@@ -193,7 +195,6 @@ class App extends Component {
                              0,
                              0,
                              0);
-            console.log(e.toJSON());
             query.params.max_date = e;
           }
           if (this.state.difficulty === 0 && this.state.difficultyfield !== '') {
@@ -204,10 +205,10 @@ class App extends Component {
           // }
 
           if (Object.keys(query.params).length !== 0) {
-            this.fetchCards(query);
             this.setState({
               useFiltered: 1
             });
+            this.fetchCards(query);
           } else {
             this.setState({
               useFiltered: 0
@@ -220,11 +221,8 @@ class App extends Component {
 
   }
 
-  filterDifficulty() {
-    //if (this.state.difficultfield !== '' && )
-  }
-
   componentDidMount() {
+    mql.addListener(this.mediaQueryChanged);
     this.fetchCategories(0);
     this.fetchInitialCards(0);
   }
@@ -357,21 +355,33 @@ class App extends Component {
 
     var indexOfLast = this.state.activePage * this.state.itemsPerPage;
     var indexOfFirst = indexOfLast - this.state.itemsPerPage;
-    var cardsToRender;
-    var pages;
-    if (this.state.useFiltered === 0) {
-      cardsToRender = this.state.allCards.slice(indexOfFirst, indexOfLast);
-      pages = Math.max(Math.trunc(this.state.allCards.length / this.state.itemsPerPage), 1);
-    } else {
-      cardsToRender = this.state.filteredCards.slice(indexOfFirst, indexOfLast);
-      pages = Math.max(Math.trunc(this.state.filteredCards.length / this.state.itemsPerPage), 1);
-    }
+    var pages;    
+
+    var listOfCards = (this.state.useFiltered === 0) ? this.state.allCards : this.state.filteredCards;
+    var cardRef = listOfCards;
+
+    console.log(listOfCards.length);
+    if (this.state.difficultyfield !== '') {
+      if (this.diffFilteredCards.length === 0) {
+        let difficulty = parseInt(this.state.difficultyfield);
+          if (this.state.difficulty === 1) {
+            this.diffFilteredCards = listOfCards.filter(item => item.difficulty > difficulty);
+            cardRef = this.diffFilteredCards;
+          } else if (this.state.difficulty === 2) {
+            this.diffFilteredCards = listOfCards.filter(item => item.difficulty < difficulty);
+            cardRef = this.diffFilteredCards;
+          }
+      }
+    } 
+//    console.log(cardRef.length);
+    let cardsToRender = cardRef.slice(indexOfFirst, indexOfLast);
+    pages = Math.max(Math.trunc(cardRef.length / this.state.itemsPerPage), 1);
 
     return (
       <Sidebar {...sidebarProps}>
         <MaterialTitlePanel title={contentHeader}>
           <div style={styles.content} className = "panel-heading">    
-            {cardsToRender}
+            <CardList cards={cardsToRender} />
           </div>
           <div className = "panel-body">
             <div id = "react-paginate">

@@ -40,6 +40,8 @@ class SidebarContent extends Component {
   constructor(props) {
     super(props);
 
+    this.timeout = 0;
+
     this.state = {
       props: props,
       categories: props.categories,
@@ -63,12 +65,19 @@ class SidebarContent extends Component {
   }
 
   onDifficultyChange(event) {
-    const reg = /^[0-9\b]+$/;
-    if(event.target.value === '' || reg.test(event.target.value)) {
-      this.state.props.difficultySearchListener(event.target.value)
-    } else {
-      this.state.props.difficultySearchListener('')
+    event.persist();
+    this.event = event;
+    if (this.timeout) {
+      clearTimeout(this.timeout);
     }
+    this.timeout = setTimeout(() => {
+      const reg = /^[0-9\b]+$/;
+      if(this.event.target.value === '' || reg.test(this.event.target.value)) {
+        this.state.props.difficultySearchListener(event.target.value)
+      } else {
+        this.state.props.difficultySearchListener('')
+      }
+    }, 500);
   }
 
   onLoadAllPress(event) {
