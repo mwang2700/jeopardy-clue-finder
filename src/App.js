@@ -37,7 +37,7 @@ class App extends Component {
       difficultyfield: '',
       dateStart: '',
       dateEnd: '', 
-      favorites: [],
+      favorites: new Set(),
       favoritesMode: 0,
       open: false,
       activePage: 1,
@@ -46,6 +46,7 @@ class App extends Component {
     };
 
     this.diffFilteredCards = [];
+    this.timeout = 0;
 
     this.fetchCategories = this.fetchCategories.bind(this);
     this.fetchAllCards = this.fetchAllCards.bind(this);
@@ -62,11 +63,11 @@ class App extends Component {
     this.onStartDateChange = this.onStartDateChange.bind(this);
     this.onEndDateChange = this.onEndDateChange.bind(this);
     this.onFavoritesDDChange = this.onFavoritesDDChange.bind(this);
-
+    this.addToFavorites = this.addToFavorites.bind(this);
   }
 
   fetchCategories(currOffset) {
-    axios.get('http://jservice.io/api/categories?offset=' + currOffset + 
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/categories?offset=' + currOffset + 
               '&count=100')
         .then((response) =>  {
           let category = response.data; 
@@ -84,7 +85,7 @@ class App extends Component {
 
   fetchAllCards(offset) {
     let cards = [];
-    axios.get('http://jservice.io/api/clues?offset=' + offset)
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
       .then((response) => {
         let data = response.data;
         if (data.length > 0) {
@@ -93,7 +94,9 @@ class App extends Component {
               let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
               cards.push(
                 {
+                  listener: this.addToFavorites,
                   key: data[i].id,
+                  id: data[i].id,
                   clue: data[i].question,
                   category: data[i].category.title,
                   difficulty: data[i].value,
@@ -123,7 +126,9 @@ class App extends Component {
               let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
               cards.push(
                 {
+                  listener: this.addToFavorites,
                   key: data[i].id,
+                  id: data[i].id,
                   clue: data[i].question,
                   category: data[i].category.title,
                   difficulty: data[i].value,
@@ -151,7 +156,9 @@ class App extends Component {
           let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
           cards.push(
             {
+              listener: this.addToFavorites,
               key: data[i].id,
+              id: data[i].id,
               clue: data[i].question,
               category: data[i].category.title,
               difficulty: data[i].value,
@@ -251,7 +258,16 @@ class App extends Component {
   }
 
   onSearchChange = (event) => {
-    this.setState({searchfield: event.target.value})
+    event.persist();
+    this.event = event;
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+    this.timeout = setTimeout(() => {
+      this.setState({
+        searchfield: this.event.target.value
+      });
+    }, 1000);
   }
 
   onCategoryChange = (event) => {
@@ -317,6 +333,18 @@ class App extends Component {
     });
   }
 
+  addToFavorites = (id) => {
+    let favs = this.state.favorites;
+    if (favs.has(id)) {
+      favs.delete(id);
+    } else {
+      favs.add(id);
+    }
+    this.setState({
+      favorites: favs
+    });
+  }
+
   render() { 
     const sidebarContentProps = {
       categoryChangeListener: this.onCategoryChange,
@@ -360,20 +388,26 @@ class App extends Component {
     var listOfCards = (this.state.useFiltered === 0) ? this.state.allCards : this.state.filteredCards;
     var cardRef = listOfCards;
 
-    console.log(listOfCards.length);
-    if (this.state.difficultyfield !== '') {
+    if (this.state.searchfield !== '') {
+      cardRef = listOfCards.filter(item => item.clue.toLowerCase().includes(this.state.searchfield.toLowerCase())); 
+    }
+
+    if (this.state.difficultyfield !== '' && this.state.difficulty >= 1) {
       if (this.diffFilteredCards.length === 0) {
         let difficulty = parseInt(this.state.difficultyfield);
           if (this.state.difficulty === 1) {
-            this.diffFilteredCards = listOfCards.filter(item => item.difficulty > difficulty);
-            cardRef = this.diffFilteredCards;
+            this.diffFilteredCards = cardRef.filter(item => item.difficulty > difficulty);
           } else if (this.state.difficulty === 2) {
-            this.diffFilteredCards = listOfCards.filter(item => item.difficulty < difficulty);
-            cardRef = this.diffFilteredCards;
+            this.diffFilteredCards = cardRef.filter(item => item.difficulty < difficulty);
           }
       }
+      cardRef = this.diffFilteredCards;
     } 
-//    console.log(cardRef.length);
+    if (this.state.favoritesMode === 1) {
+      cardRef = cardRef.filter(item => this.state.favorites.has(item.id));
+    } else if (this.state.favoritesMode === 2) {
+      cardRef = cardRef.filter(item => !this.state.favorites.has(item.id));
+    }
     let cardsToRender = cardRef.slice(indexOfFirst, indexOfLast);
     pages = Math.max(Math.trunc(cardRef.length / this.state.itemsPerPage), 1);
 
@@ -381,7 +415,7 @@ class App extends Component {
       <Sidebar {...sidebarProps}>
         <MaterialTitlePanel title={contentHeader}>
           <div style={styles.content} className = "panel-heading">    
-            <CardList cards={cardsToRender} />
+            <CardList cards={cardsToRender} favorited = {this.state.favorites} />
           </div>
           <div className = "panel-body">
             <div id = "react-paginate">

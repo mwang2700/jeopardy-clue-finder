@@ -191,9 +191,10 @@ class SidebarContent extends Component {
 
     links.push(
       <div key = "12" className = "loadAllText">
-        By default, up to 2500 clues are loaded. If there are any additional
-        clues, press the button below to load them (note that this slow down
-        your browser and will take a while).        
+        By default, up to 2500 clues are loaded. This means that the favorites
+        and clue name search filters may not show all results if no other filters
+        are added. To load all of the 150,000+ clues, press the button below (note
+        that this may slow down your browser and will take quite a while).        
       </div>
     );
 

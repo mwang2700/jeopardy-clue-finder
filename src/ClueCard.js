@@ -60,7 +60,12 @@ var cardWidth = viewportWidth / factor - marginFactor;
 // var cardWidth = Math.max(viewportWidth / factor - 32, 350);
 //cardWidth = Math.min(cardWidth, 500);
 
+const onCardClick = (id, listener) => (event) => {
+  listener(id);
+} 
+
 const Background = styled.div({
+  fontSize: "14px",
   backgroundSize: "cover",
   backgroundRepeat: "no-repeat",
   color: "#FFF",
@@ -81,9 +86,26 @@ const Background = styled.div({
 });
 
 	const ClueCard = (props) => {
+      var end;
+      if (props.favorited) {
+        end = (<div> <MidParagraph>Favorited</MidParagraph>
+                     <Hover>
+                      <SubTitle>Answer:</SubTitle>
+                      <Paragraph>
+                        {props.answer}  
+                      </Paragraph>
+                     </Hover> </div>);
+      } else {
+        end = (<div><Hover>
+                <SubTitle>Answer:</SubTitle>
+                <Paragraph>
+                  {props.answer}
+                </Paragraph>
+              </Hover></div>);
+      }
 	    return (
 	      <div className="ClueCard">
-	        <Background>
+	        <Background onClick = {onCardClick(props.id, props.listener)}>
 	          <DisplayOver>
 	            <BigTitle>Clue:</BigTitle>
 	            <MidParagraph> 
@@ -93,16 +115,11 @@ const Background = styled.div({
       	 			<MidParagraph>
       	 			 	{props.category}
       	 			</MidParagraph>
-      	 			<BigTitle> Difficulty:</BigTitle>
+      	 			<BigTitle>Difficulty:</BigTitle>
       	 			<MidParagraph>
       	 			 	{props.difficulty}
       	 			</MidParagraph>
-	            <Hover>
-	              <SubTitle>Answer:</SubTitle>
-	              <Paragraph>
-	                {props.answer}
-	              </Paragraph>
-	            </Hover>
+	            {end}
 	          </DisplayOver>
 	        </Background>
 	      </div>
