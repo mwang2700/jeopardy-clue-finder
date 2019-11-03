@@ -3,9 +3,6 @@ import PropTypes from "prop-types";
 import Select from 'react-virtualized-select';
 import createFilterOptions from 'react-select-fast-filter-options';
 import MaterialTitlePanel from "./material_title_panel";
-import DropdownMenu from './DropdownMenu';
-import FavoritesDropdown from './FavoritesDropdown';
-import DifficultySearchBox from './DifficultySearchBox';
 import 'react-select/dist/react-select.css';
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css';
@@ -31,7 +28,8 @@ const styles = {
   content: {
     padding: "16px",
     height: "100%",
-    backgroundColor: "white"
+    backgroundColor: "white",
+    position: "absolute"
   }
 };
 
@@ -45,12 +43,25 @@ class SidebarContent extends Component {
     this.state = {
       props: props,
       categories: props.categories,
+      difficulty: '',
+      favorites: '',
       categorySelected: ''
+    }
+
+    this.difficultyOptions = []; 
+    for (let i = 100; i <= 1000; i+=100) {
+      if (i !== 700 && i !== 900) {
+        this.difficultyOptions.push({
+          label: i.toString(),
+          value: i
+        })
+      }
     }
 
     this.onDifficultyChange = this.onDifficultyChange.bind(this);
     this.onCategoryChange = this.onCategoryChange.bind(this);
     this.onLoadAllPress = this.onLoadAllPress.bind(this);
+    this.onFavoritesChange = this.onFavoritesChange.bind(this);
   }
 
   onCategoryChange(categorySelected) {
@@ -64,24 +75,34 @@ class SidebarContent extends Component {
     }
   }
 
-  onDifficultyChange(event) {
-    event.persist();
-    this.event = event;
-    if (this.timeout) {
-      clearTimeout(this.timeout);
+  onDifficultyChange(difficulty) {
+    this.setState({
+      difficulty
+    });
+    if (difficulty === null) {
+      this.state.props.difficultySearchListener('');
+    } else {
+      this.state.props.difficultySearchListener(difficulty.value);
     }
-    this.timeout = setTimeout(() => {
-      const reg = /^[0-9\b]+$/;
-      if(this.event.target.value === '' || reg.test(this.event.target.value)) {
-        this.state.props.difficultySearchListener(event.target.value)
-      } else {
-        this.state.props.difficultySearchListener('')
-      }
-    }, 500);
+  }
+
+  onFavoritesChange(favorites) {
+    this.setState({
+      favorites
+    });
+    if (favorites === null) {
+      this.state.props.favoritesListener('');
+    } else {
+      this.state.props.favoritesListener(favorites.value);
+    }
   }
 
   onLoadAllPress(event) {
     this.state.props.fetchAllCards(2500);
+  }
+
+  onLoadAllQueryPress(event) {
+    this.state.props.queryChanged(true);
   }
 
   render() {
@@ -92,8 +113,15 @@ class SidebarContent extends Component {
     const options = this.state.categories;
     const filterOptions = createFilterOptions({ options });
 
-    const difficultyDDOptions = ["=", ">", "<"];
-    const favoritesDDOptions = ["View All", "View Only Favorites", "View All But Favorites"];
+    const favoritesOptions = [{ label: "View All", value: "View All" }, 
+                              { label: "View Only Favorites", value: "View Only Favorites"}, 
+                              { label: "View All But Favorites", value: "View All But Favorites"}];
+
+    //const favoritesDDOptions = ["View All", "View Only Favorites", "View All But Favorites"];   
+
+    const difficultyOptions = this.difficultyOptions;
+    const diffFilterOptions = createFilterOptions({ difficultyOptions });
+    const favoritesFilterOptions = createFilterOptions({ favoritesOptions });
     const links = [];    
 
     links.push(
@@ -104,7 +132,9 @@ class SidebarContent extends Component {
 
     links.push(
       <Select
+        autosize = {false}
         key="2"
+        className = "mt-4 col-md-8 col-offset-4"
         options={options} 
         name="categorySelected" 
         onChange = {this.onCategoryChange}
@@ -122,18 +152,29 @@ class SidebarContent extends Component {
     );
 
     links.push(
-      <div key = "4">
+      <div key = "4" className = "difficultyOps">
         <span>
-          <DropdownMenu key="5" 
-            className="difficultyDD" 
-            options = {difficultyDDOptions} 
-            listener = {this.state.props.difficultyChangeListener}
-          />
+          <select className="difficultyDD" onChange={this.state.props.difficultyChangeListener}>
+            <option value = {0}> = </option>
+            <option value = {1}> &gt; </option>
+            <option value = {2}> &lt; </option>
+          </select>
         </span>
         <span>
-         <DifficultySearchBox key="6"
-            className="difficultySB"
-            searchChange = {this.onDifficultyChange}
+          <Select
+            styles={{
+              width: `500px`
+            }}
+            autosize = {false}
+            key = "6"
+            options={difficultyOptions} 
+            name="difficulty" 
+            className = "difficulty"
+            onChange = {this.onDifficultyChange}
+            searchable = {true}
+            clearable = {true}
+            value = {this.state.difficulty} 
+            filterOptions = {diffFilterOptions}
           />
         </span>
       </div>
@@ -174,13 +215,17 @@ class SidebarContent extends Component {
     );
 
     links.push(
-      <div key="10" className="favorites">
-        <FavoritesDropdown key="11" 
-          className="favoritesDD" 
-          options = {favoritesDDOptions} 
-          listener = {this.state.props.favoritesListener}
-        />
-      </div>
+      <Select
+        autosize = {false}
+        key="10"
+        options={favoritesOptions} 
+        name="favorites" 
+        onChange = {this.onFavoritesChange}
+        searchable = {true}
+        clearable = {true}
+        value = {this.state.favorites}
+        filterOptions = {favoritesFilterOptions}
+      />
     );
 
     links.push(
@@ -190,17 +235,14 @@ class SidebarContent extends Component {
     );
 
     links.push(
-      <div key = "12" className = "loadAllText">
-        By default, up to 2500 clues are loaded. This means that the favorites
-        and clue name search filters may not show all results if no other filters
-        are added. To load all of the 150,000+ clues, press the button below (note
-        that this may slow down your browser and will take quite a while).        
+      <div key = "12" className = "loadAllButton">
+        <button className = "loadButton" onClick = {this.onLoadAllPress}> Load All</button>
       </div>
     );
 
     links.push(
-      <div key = "13" className = "loadAllButton">
-        <button className = "loadButton" onClick = {this.onLoadAllPress}> Load </button>
+      <div key = "13" className = "loadAllQueryButton">
+        <button className = "loadQueryButton" onClick = {this.onLoadAllQueryPress}> Load All in Query </button>
       </div>
     );
 

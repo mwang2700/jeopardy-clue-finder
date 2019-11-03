@@ -1,4 +1,9 @@
 .ClueCard {
 	display: inline-block;
+	vertical-align: middle;
 	padding:3px;
+}
+
+.logo {
+	margin-top: 10px;
 }

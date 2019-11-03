@@ -4,6 +4,12 @@
 .title {
   margin-right: 5rem;
 }
+.title-panel {
+	position: relative;
+}
+.panel-heading {
+	position: relative;
+}
 #react-paginate {
 	text-align: center;
 }

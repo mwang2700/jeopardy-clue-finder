@@ -3,6 +3,10 @@
   "name": "jeopardyc1",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "6.9.0",
+    "node": "10.16.0"
+  },
   "dependencies": {
     "@emotion/core": "^10.0.21",
     "@emotion/styled": "^10.0.17",
@@ -10,6 +14,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-flippy": "^0.1.5",
     "react-hamburger-menu": "^1.1.1",
     "react-js-pagination": "^3.0.2",
     "react-paginate": "^6.3.0",

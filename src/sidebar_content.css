@@ -3,18 +3,56 @@
     font-family: 'fontawesome', sans-serif;
 }
 
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+.dateBounds {
+	color: gray;
+}
+
+.difficulty {
+	width: 250px;
+	display:inline-block;
+	vertical-align: middle;
+}
+
+.difficultyDD {
+	color: gray;
+	border-radius: 5px;
+	border-color: #CDCDCD;
+	height: 35px;
+	width: 65px;
+	margin-right: 2px;
+	display:inline-block;
+	vertical-align: middle;
+}
+
+.difficultyDD-dropdown {
+	color: gray;
+}
+
 .cat, .diff, .date, .fav, .ans {
 	font-size: 25px;
 }
 
 .startDate {
-	margin-right: 5px;
-	width: 137px;
+	color: gray;
+	border: 1px solid;
+	border-color: #CDCDCD;
+	border-radius: 5px;
+	margin-right: 7px;
+	width: 140px;
 }
 
 .endDate {
-	margin-left: 5px;
-	width: 137px;
+	color: gray;
+	border: 1px solid;
+	border-color: #CDCDCD;
+	border-radius: 5px;
+	margin-left: 7px;
+	width: 140px;
 }
 
 .loadAllText {
@@ -22,17 +60,17 @@
 	font-size: 1.1 rem;
 }
 
-.loadAllButton {
+.loadAllButton, .loadAllQueryButton {
 	text-align: center;
 }
 
-.loadButton {
-	background-color: #add8e6;
+.loadButton, .loadQueryButton {
+	background-color: grey;
 	border: none;
 	color: white;
 	width: 225px;
-	padding: 20px;
-	margin-top: 10px;
+	padding: 15px;
+	margin-top: 5px;
 	text-align: center;
 	text-decoration: none;
 	font-size: 16px;

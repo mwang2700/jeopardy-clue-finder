@@ -1,44 +1,6 @@
 import React from "react";
-import styled from "@emotion/styled/macro";
+import Flippy, { FrontSide, BackSide } from 'react-flippy';
 import './ClueCard.css';
-
-const Hover = styled.div({
-  opacity: 0,
-  transition: "opacity 350ms ease",
-});
-
-const DisplayOver = styled.div({
-  height: "100%",
-  left: "0",
-  position: "absolute",
-  top: "0",
-  width: "100%",
-  zIndex: 2,
-  transition: "background-color 350ms ease",
-  backgroundColor: "transparent",
-  padding: "0px 0px 0px 15px",
-  boxSizing: "border-box",
-});
-
-const BigTitle = styled.h2({
-  fontFamily: "Roboto",
-});
-
-const MidParagraph = styled.h4({
-  fontFamily: "Roboto",
-})
-
-const SubTitle = styled.h4({
-  fontFamily: "Roboto",
-  transform: "translate3d(0,50px,0)",
-  transition: "transform 350ms ease",
-});
-
-const Paragraph = styled.p({
-  fontFamily: "Roboto",
-  transform: "translate3d(0,50px,0)",
-  transition: "transform 350ms ease",
-});
 
 var factor = 3;
 var marginFactor = 35;
@@ -57,73 +19,182 @@ if (viewportWidth < 600) {
 	factor = 4;
 }
 var cardWidth = viewportWidth / factor - marginFactor;
-// var cardWidth = Math.max(viewportWidth / factor - 32, 350);
-//cardWidth = Math.min(cardWidth, 500);
 
 const onCardClick = (id, listener) => (event) => {
   listener(id);
 } 
 
-const Background = styled.div({
-  fontSize: "14px",
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  color: "#FFF",
-  position: "relative",
-  width: cardWidth.toString() + "px",
-  height: "425px",
-  cursor: "pointer",
-  backgroundImage: "url(https://images.unsplash.com/photo-1523362500701-326a87b9f69b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)",
-  [`:hover ${DisplayOver}`]: {
-    backgroundColor: "rgba(0,0,0,.5)",
-  },
-  [`:hover ${SubTitle}, :hover ${Paragraph}`]: {
-    transform: "translate3d(0,0,0)",
-  },
-  [`:hover ${Hover}`]: {
-    opacity: 1,
-  },
-});
-
 	const ClueCard = (props) => {
-      var end;
-      if (props.favorited) {
-        end = (<div> <MidParagraph>Favorited</MidParagraph>
-                     <Hover>
-                      <SubTitle>Answer:</SubTitle>
-                      <Paragraph>
-                        {props.answer}  
-                      </Paragraph>
-                     </Hover> </div>);
-      } else {
-        end = (<div><Hover>
-                <SubTitle>Answer:</SubTitle>
-                <Paragraph>
-                  {props.answer}
-                </Paragraph>
-              </Hover></div>);
-      }
-	    return (
-	      <div className="ClueCard">
-	        <Background onClick = {onCardClick(props.id, props.listener)}>
-	          <DisplayOver>
-	            <BigTitle>Clue:</BigTitle>
-	            <MidParagraph> 
-	            	{props.clue}
-      	 			</MidParagraph>
-      	 			<BigTitle>Category:</BigTitle>
-      	 			<MidParagraph>
-      	 			 	{props.category}
-      	 			</MidParagraph>
-      	 			<BigTitle>Difficulty:</BigTitle>
-      	 			<MidParagraph>
-      	 			 	{props.difficulty}
-      	 			</MidParagraph>
-	            {end}
-	          </DisplayOver>
-	        </Background>
-	      </div>
-	    );
+    if (props.favorited) {
+      return ( 
+      <div className="ClueCard">
+        <Flippy
+          flipOnHover = {true}
+          flipOnClick = {false}
+          flipDirection = "horizontal"
+          style={{ width: cardWidth.toString() + "px", height: "400px" }}
+          onClick = {onCardClick(props.id, props.listener)}
+        >
+          <FrontSide
+            style = {{
+              backgroundColor: '#0033cc',
+              color: 'white',
+              textAlign: 'center',
+              fontFamily: 'sans-serif',
+            }}
+            onClick = {onCardClick(props.id, props.listener)}
+          >
+            <img
+              src="https://www.trzcacak.rs/myfile/full/439-4391718_jeopardy-transparent-jeopardy-logo.png"
+              alt="jeopardy-logo"
+              className="logo"
+              style = {{ maxWidth: '60%', maxHeight: '70%'}}
+            />
+            <hr
+              style = {{
+                color: '#AEAEAF',
+                width: '80%'
+              }}
+            />
+            <div 
+              className = "categoryText"
+              style = {{
+                marginTop: '10px',
+                fontSize: '19px'
+              }} 
+              >
+                {props.category}
+            </div>
+            <div 
+              className = "difficultyText"
+              style = {{
+                marginTop: '10px',
+                fontSize: '19px'
+              }} 
+              >
+                {props.difficulty}
+            </div>
+            <div 
+              className = "clueText" 
+              style = {{
+                marginTop: '10px'
+              }} 
+              >
+                {props.clue}
+            </div>
+            <div
+              className = "favoritedText"
+              style = {{
+                marginTop: '10px'
+              }}
+            >
+              Favorited
+            </div>
+          </FrontSide>
+          <BackSide
+            style = {{
+              backgroundColor: '#0033cc',
+              color: 'white'
+            }}
+            onClick = {onCardClick(props.id, props.listener)}
+          >
+            <div 
+              className = "answerText" 
+              style = {{
+                display: 'flex',
+                textAlign: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: '150px'
+              }}
+            >
+                {props.answer}
+            </div>
+          </BackSide>
+        </Flippy>
+      </div>
+      );
+    }
+    return (
+      <div className="ClueCard">
+        <Flippy
+          flipOnHover = {true}
+          flipOnClick = {false}
+          flipDirection = "horizontal"
+          style={{ width: cardWidth.toString() + "px", height: "400px" }}
+          onClick = {onCardClick(props.id, props.listener)}
+        >
+          <FrontSide
+            style = {{
+              backgroundColor: '#0033cc',
+              color: 'white',
+              textAlign: 'center',
+              fontFamily: 'sans-serif',
+            }}
+            onClick = {onCardClick(props.id, props.listener)}
+          >
+            <img
+              src="https://www.trzcacak.rs/myfile/full/439-4391718_jeopardy-transparent-jeopardy-logo.png"
+              alt="jeopardy-logo"
+              className="logo"
+              style = {{ maxWidth: '60%', maxHeight: '70%'}}
+            />
+            <hr
+              style = {{
+                color: '#AEAEAF',
+                width: '80%'
+              }}
+            />
+            <div 
+              className = "categoryText"
+              style = {{
+                marginTop: '10px',
+                fontSize: '19px'
+              }} 
+              >
+                {props.category}
+            </div>
+            <div 
+              className = "difficultyText"
+              style = {{
+                marginTop: '10px',
+                fontSize: '19px'
+              }} 
+              >
+                {props.difficulty}
+            </div>
+            <div 
+              className = "clueText" 
+              style = {{
+                marginTop: '10px'
+              }} 
+              >
+                {props.clue}
+            </div>
+          </FrontSide>
+          <BackSide
+            style = {{
+              backgroundColor: '#0033cc',
+              color: 'white'
+            }}
+            onClick = {onCardClick(props.id, props.listener)}
+          >
+            <div 
+              className = "answerText" 
+              style = {{
+                display: 'flex',
+                textAlign: 'center',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: '150px'
+              }}
+            >
+                {props.answer}
+            </div>
+          </BackSide>
+        </Flippy>
+      </div>
+    );
 	}
 
 export default ClueCard;

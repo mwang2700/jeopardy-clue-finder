@@ -33,7 +33,7 @@ class App extends Component {
       docked: mql.matches,
       searchfield: '',
       categoryindex: -1,
-      difficulty: -1,
+      difficulty: 0,
       difficultyfield: '',
       dateStart: '',
       dateEnd: '', 
@@ -52,6 +52,7 @@ class App extends Component {
     this.fetchAllCards = this.fetchAllCards.bind(this);
     this.fetchCards = this.fetchCards.bind(this);
     this.fetchInitialCards = this.fetchInitialCards.bind(this);
+    this.fetchAllQueriedCards = this.fetchAllQueriedCards.bind(this);
     this.queryChanged = this.queryChanged.bind(this);
     this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
@@ -67,7 +68,7 @@ class App extends Component {
   }
 
   fetchCategories(currOffset) {
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/categories?offset=' + currOffset + 
+    axios.get('http://jservice.io/api/categories?offset=' + currOffset + 
               '&count=100')
         .then((response) =>  {
           let category = response.data; 
@@ -85,7 +86,7 @@ class App extends Component {
 
   fetchAllCards(offset) {
     let cards = [];
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
+    axios.get('http://jservice.io/api/clues?offset=' + offset)
       .then((response) => {
         let data = response.data;
         if (data.length > 0) {
@@ -117,7 +118,7 @@ class App extends Component {
 
   fetchInitialCards(offset) {
     let cards = [];
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
+    axios.get('http://jservice.io/api/clues?offset=' + offset)
       .then((response) => {
         let data = response.data;
         if (offset <= 2400) {
@@ -173,7 +174,38 @@ class App extends Component {
       });
   }
 
-  queryChanged(catId, dateS, dateE, difficulty, difficultyfield) {
+  fetchAllQueriedCards(query) {
+    let cards = [];
+    axios.get('http://jservice.io/api/clues', query)
+      .then((response) => {
+        let data = response.data;
+        if (data.length > 0) {
+          for (let i = 0; i < data.length; i++) {
+            let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
+            cards.push(
+              {
+                listener: this.addToFavorites,
+                key: data[i].id,
+                id: data[i].id,
+                clue: data[i].question,
+                category: data[i].category.title,
+                difficulty: data[i].value,
+                answer: removedTags,
+                airDate: data[i].airdate
+              } 
+            );  
+          }
+          query.params.offset = query.params.offset + 100;
+          this.fetchAllQueriedCards(query);
+          let currCards = this.state.filteredCards;
+          this.setState({
+            filteredCards: currCards.concat(cards),
+          });
+      }
+    });
+  }
+
+  queryChanged(loadAll) {
     setTimeout(
       function() {
           this.diffFilteredCards = [];
@@ -182,14 +214,13 @@ class App extends Component {
           };
           if (this.state.categoryindex !== -1) {
             query.params.category = this.state.categoryindex.toString();
-      //      this.fetchCards(query);
           }
           let dateStart = this.state.dateStart;
           if (dateStart !== '') {
             var s = new Date(parseInt(dateStart.substring(0, 4)),
                              parseInt(dateStart.substring(5, 7)-1),
-                             parseInt(dateStart.substring(8, 10)),
-                             0,
+                             parseInt(dateStart.substring(8, 10)-1),
+                             20,
                              0,
                              0);
             query.params.min_date = s;
@@ -199,23 +230,25 @@ class App extends Component {
             var e = new Date(parseInt(dateEnd.substring(0, 4)),
                              parseInt(dateEnd.substring(5, 7)-1),
                              parseInt(dateEnd.substring(8, 10)),
-                             0,
-                             0,
+                             19,
+                             59,
                              0);
             query.params.max_date = e;
           }
           if (this.state.difficulty === 0 && this.state.difficultyfield !== '') {
             query.params.value = this.state.difficultyfield;
           }
-          // if (this.state.favoritesMode !== 0) {
-
-          // }
 
           if (Object.keys(query.params).length !== 0) {
             this.setState({
               useFiltered: 1
             });
-            this.fetchCards(query);
+            if (loadAll) {
+              query.params.offset = 100;
+              this.fetchAllQueriedCards(query);
+            } else {
+              this.fetchCards(query);
+            }
           } else {
             this.setState({
               useFiltered: 0
@@ -274,27 +307,31 @@ class App extends Component {
     this.setState({
       categoryindex: event
     });
-    this.queryChanged();
+    this.queryChanged(false);
   }
 
   onDifficultyChange = (event) => {
-    let difficulty = 0;
-    if (event === ">") {
-      difficulty = 1;
-    } else if (event === "<") {
-      difficulty = 2;
+    if (event === -1) {
+      this.setState({
+        difficulty: -1
+      })
+      this.queryChanged(false);
+    } else {
+      event.persist();
+      console.log(event.target.value);   
+      this.setState({
+        difficulty: parseInt(event.target.value)
+      });
+      this.queryChanged(false);
     }
-    this.setState({
-      difficulty: difficulty
-    });
-    this.queryChanged();
   }
 
   onDifficultySearchChange = (event) => {
+    console.log(event);
     this.setState({
       difficultyfield: event
     });
-    this.queryChanged();
+    this.queryChanged(false);
   }
 
   onStartDateChange = (event) => {
@@ -302,7 +339,7 @@ class App extends Component {
     this.setState({
       dateStart: event.target.value
     });
-    this.queryChanged();
+    this.queryChanged(false);
   }
 
   onEndDateChange = (event) => {
@@ -310,7 +347,7 @@ class App extends Component {
     this.setState({
       dateEnd: event.target.value
     });
-    this.queryChanged();
+    this.queryChanged(false);
   }
 
   onFavoritesDDChange = (event) => {
@@ -354,7 +391,8 @@ class App extends Component {
       endDateListener: this.onEndDateChange,  
       favoritesListener: this.onFavoritesDDChange,
       categories: this.state.allCategories,
-      fetchAllCards: this.fetchAllCards
+      fetchAllCards: this.fetchAllCards,
+      queryChanged: this.queryChanged
     };
     const sidebar = <SidebarContent {...sidebarContentProps}/>;
 
@@ -369,8 +407,12 @@ class App extends Component {
             =
           </a>
         )}
-        <span className="title"> Jeopardy Clue Finder </span>
-        <span className="inner"> <SearchBox className="search" searchChange = {this.onSearchChange} text = "Search clue name"/> </span>
+        <span className="title"> 
+          Jeopardy Clue Finder 
+        </span>
+        <span className="inner"> 
+          <SearchBox className="search" searchChange = {this.onSearchChange} text = "Search clue name"/> 
+        </span>
       </span>
     );
 
@@ -393,16 +435,21 @@ class App extends Component {
     }
 
     if (this.state.difficultyfield !== '' && this.state.difficulty >= 1) {
+      console.log("before");
       if (this.diffFilteredCards.length === 0) {
+        console.log(this.state.difficulty);
         let difficulty = parseInt(this.state.difficultyfield);
-          if (this.state.difficulty === 1) {
-            this.diffFilteredCards = cardRef.filter(item => item.difficulty > difficulty);
-          } else if (this.state.difficulty === 2) {
-            this.diffFilteredCards = cardRef.filter(item => item.difficulty < difficulty);
-          }
+        console.log(difficulty);
+        if (this.state.difficulty === 1) {
+          this.diffFilteredCards = cardRef.filter(item => item.difficulty > difficulty);
+        } else if (this.state.difficulty === 2) {
+          this.diffFilteredCards = cardRef.filter(item => item.difficulty < difficulty);
+        }
       }
       cardRef = this.diffFilteredCards;
-    } 
+    } else {
+      this.diffFilteredCards = [];
+    }
     if (this.state.favoritesMode === 1) {
       cardRef = cardRef.filter(item => this.state.favorites.has(item.id));
     } else if (this.state.favoritesMode === 2) {
@@ -413,7 +460,7 @@ class App extends Component {
 
     return (
       <Sidebar {...sidebarProps}>
-        <MaterialTitlePanel title={contentHeader}>
+        <MaterialTitlePanel title={contentHeader} className = "title-panel">
           <div style={styles.content} className = "panel-heading">    
             <CardList cards={cardsToRender} favorited = {this.state.favorites} />
           </div>
