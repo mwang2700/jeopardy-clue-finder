@@ -262,6 +262,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    document.title = ''
     mql.addListener(this.mediaQueryChanged);
     this.fetchCategories(0);
     this.fetchInitialCards(0);
@@ -318,7 +319,6 @@ class App extends Component {
       this.queryChanged(false);
     } else {
       event.persist();
-      console.log(event.target.value);   
       this.setState({
         difficulty: parseInt(event.target.value)
       });
@@ -327,7 +327,6 @@ class App extends Component {
   }
 
   onDifficultySearchChange = (event) => {
-    console.log(event);
     this.setState({
       difficultyfield: event
     });
@@ -435,11 +434,8 @@ class App extends Component {
     }
 
     if (this.state.difficultyfield !== '' && this.state.difficulty >= 1) {
-      console.log("before");
       if (this.diffFilteredCards.length === 0) {
-        console.log(this.state.difficulty);
         let difficulty = parseInt(this.state.difficultyfield);
-        console.log(difficulty);
         if (this.state.difficulty === 1) {
           this.diffFilteredCards = cardRef.filter(item => item.difficulty > difficulty);
         } else if (this.state.difficulty === 2) {
