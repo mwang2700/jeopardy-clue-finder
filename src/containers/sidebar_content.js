@@ -101,10 +101,6 @@ class SidebarContent extends Component {
     this.state.props.fetchAllCards(2500);
   }
 
-  onLoadAllQueryPress(event) {
-    this.state.props.queryChanged(true);
-  }
-
   render() {
     const style = this.state.props.style
     ? { ...styles.sidebar, ...this.state.props.style }
@@ -237,12 +233,6 @@ class SidebarContent extends Component {
     links.push(
       <div key = "12" className = "loadAllButton">
         <button className = "loadButton" onClick = {this.onLoadAllPress}> Load All</button>
-      </div>
-    );
-
-    links.push(
-      <div key = "13" className = "loadAllQueryButton">
-        <button className = "loadQueryButton" onClick = {this.onLoadAllQueryPress}> Load All in Query </button>
       </div>
     );
 

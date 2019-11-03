@@ -3,9 +3,9 @@ import axios from 'axios';
 import Sidebar from 'react-sidebar';
 import Pagination from 'react-paginate';
 import SidebarContent from './sidebar_content';
-import SearchBox from './SearchBox';
+import SearchBox from '../components/SearchBox';
 import MaterialTitlePanel from './material_title_panel';
-import CardList from './CardList';
+import CardList from '../components/CardList';
 import './App.css';
 
 
@@ -52,7 +52,6 @@ class App extends Component {
     this.fetchAllCards = this.fetchAllCards.bind(this);
     this.fetchCards = this.fetchCards.bind(this);
     this.fetchInitialCards = this.fetchInitialCards.bind(this);
-    this.fetchAllQueriedCards = this.fetchAllQueriedCards.bind(this);
     this.queryChanged = this.queryChanged.bind(this);
     this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
     this.toggleOpen = this.toggleOpen.bind(this);
@@ -174,38 +173,7 @@ class App extends Component {
       });
   }
 
-  fetchAllQueriedCards(query) {
-    let cards = [];
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues', query)
-      .then((response) => {
-        let data = response.data;
-        if (data.length > 0) {
-          for (let i = 0; i < data.length; i++) {
-            let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
-            cards.push(
-              {
-                listener: this.addToFavorites,
-                key: data[i].id,
-                id: data[i].id,
-                clue: data[i].question,
-                category: data[i].category.title,
-                difficulty: data[i].value,
-                answer: removedTags,
-                airDate: data[i].airdate
-              } 
-            );  
-          }
-          query.params.offset = query.params.offset + 100;
-          this.fetchAllQueriedCards(query);
-          let currCards = this.state.filteredCards;
-          this.setState({
-            filteredCards: currCards.concat(cards),
-          });
-      }
-    });
-  }
-
-  queryChanged(loadAll) {
+  queryChanged() {
     setTimeout(
       function() {
           this.diffFilteredCards = [];
@@ -243,12 +211,7 @@ class App extends Component {
             this.setState({
               useFiltered: 1
             });
-            if (loadAll) {
-              query.params.offset = 100;
-              this.fetchAllQueriedCards(query);
-            } else {
-              this.fetchCards(query);
-            }
+            this.fetchCards(query);
           } else {
             this.setState({
               useFiltered: 0
@@ -262,7 +225,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    document.title = ''
+    document.title = 'Jeopardy Clue Finder'
     mql.addListener(this.mediaQueryChanged);
     this.fetchCategories(0);
     this.fetchInitialCards(0);
@@ -308,7 +271,7 @@ class App extends Component {
     this.setState({
       categoryindex: event
     });
-    this.queryChanged(false);
+    this.queryChanged();
   }
 
   onDifficultyChange = (event) => {
@@ -316,13 +279,13 @@ class App extends Component {
       this.setState({
         difficulty: -1
       })
-      this.queryChanged(false);
+      this.queryChanged();
     } else {
       event.persist();
       this.setState({
         difficulty: parseInt(event.target.value)
       });
-      this.queryChanged(false);
+      this.queryChanged();
     }
   }
 
@@ -330,7 +293,7 @@ class App extends Component {
     this.setState({
       difficultyfield: event
     });
-    this.queryChanged(false);
+    this.queryChanged();
   }
 
   onStartDateChange = (event) => {
@@ -338,7 +301,7 @@ class App extends Component {
     this.setState({
       dateStart: event.target.value
     });
-    this.queryChanged(false);
+    this.queryChanged();
   }
 
   onEndDateChange = (event) => {
@@ -346,7 +309,7 @@ class App extends Component {
     this.setState({
       dateEnd: event.target.value
     });
-    this.queryChanged(false);
+    this.queryChanged();
   }
 
   onFavoritesDDChange = (event) => {
@@ -469,7 +432,7 @@ class App extends Component {
                 breakClassName={'break-me'}
                 pageCount={pages}
                 marginPageDisplayed={2}
-                pageRangeDisplayed={10}
+                pageRangeDisplayed={5}
                 onPageChange = {this.changePage.bind(this)}
                 containerClassName={'pagination'}
                 subContainerClassName = {'pages pagination'}
