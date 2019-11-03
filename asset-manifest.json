@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/jeopardy-clue-finder/static/css/main.95a2ebeb.chunk.css",
-    "main.js": "/jeopardy-clue-finder/static/js/main.8d59a125.chunk.js",
-    "main.js.map": "/jeopardy-clue-finder/static/js/main.8d59a125.chunk.js.map",
+    "main.css": "/jeopardy-clue-finder/static/css/main.2e1c0e82.chunk.css",
+    "main.js": "/jeopardy-clue-finder/static/js/main.cca76d6a.chunk.js",
+    "main.js.map": "/jeopardy-clue-finder/static/js/main.cca76d6a.chunk.js.map",
     "runtime-main.js": "/jeopardy-clue-finder/static/js/runtime-main.478fac5e.js",
     "runtime-main.js.map": "/jeopardy-clue-finder/static/js/runtime-main.478fac5e.js.map",
-    "static/css/2.d5f11bc3.chunk.css": "/jeopardy-clue-finder/static/css/2.d5f11bc3.chunk.css",
-    "static/js/2.86f4fe84.chunk.js": "/jeopardy-clue-finder/static/js/2.86f4fe84.chunk.js",
-    "static/js/2.86f4fe84.chunk.js.map": "/jeopardy-clue-finder/static/js/2.86f4fe84.chunk.js.map",
+    "static/css/2.2542c7b2.chunk.css": "/jeopardy-clue-finder/static/css/2.2542c7b2.chunk.css",
+    "static/js/2.bdefcda9.chunk.js": "/jeopardy-clue-finder/static/js/2.bdefcda9.chunk.js",
+    "static/js/2.bdefcda9.chunk.js.map": "/jeopardy-clue-finder/static/js/2.bdefcda9.chunk.js.map",
     "index.html": "/jeopardy-clue-finder/index.html",
-    "precache-manifest.a21b6d6e4122b1d9abf8c9509381c87f.js": "/jeopardy-clue-finder/precache-manifest.a21b6d6e4122b1d9abf8c9509381c87f.js",
+    "precache-manifest.4215b59bd814ddca481cc0c82f38921a.js": "/jeopardy-clue-finder/precache-manifest.4215b59bd814ddca481cc0c82f38921a.js",
     "service-worker.js": "/jeopardy-clue-finder/service-worker.js",
-    "static/css/2.d5f11bc3.chunk.css.map": "/jeopardy-clue-finder/static/css/2.d5f11bc3.chunk.css.map",
-    "static/css/main.95a2ebeb.chunk.css.map": "/jeopardy-clue-finder/static/css/main.95a2ebeb.chunk.css.map"
+    "static/css/2.2542c7b2.chunk.css.map": "/jeopardy-clue-finder/static/css/2.2542c7b2.chunk.css.map",
+    "static/css/main.2e1c0e82.chunk.css.map": "/jeopardy-clue-finder/static/css/main.2e1c0e82.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.478fac5e.js",
-    "static/css/2.d5f11bc3.chunk.css",
-    "static/js/2.86f4fe84.chunk.js",
-    "static/css/main.95a2ebeb.chunk.css",
-    "static/js/main.8d59a125.chunk.js"
+    "static/css/2.2542c7b2.chunk.css",
+    "static/js/2.bdefcda9.chunk.js",
+    "static/css/main.2e1c0e82.chunk.css",
+    "static/js/main.cca76d6a.chunk.js"
   ]
 }
