@@ -68,7 +68,7 @@ class App extends Component {
   }
 
   fetchCategories(currOffset) {
-    axios.get('http://jservice.io/api/categories?offset=' + currOffset + 
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/categories?offset=' + currOffset + 
               '&count=100')
         .then((response) =>  {
           let category = response.data; 
@@ -86,7 +86,7 @@ class App extends Component {
 
   fetchAllCards(offset) {
     let cards = [];
-    axios.get('http://jservice.io/api/clues?offset=' + offset)
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
       .then((response) => {
         let data = response.data;
         if (data.length > 0) {
@@ -118,7 +118,7 @@ class App extends Component {
 
   fetchInitialCards(offset) {
     let cards = [];
-    axios.get('http://jservice.io/api/clues?offset=' + offset)
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
       .then((response) => {
         let data = response.data;
         if (offset <= 2400) {
@@ -150,7 +150,7 @@ class App extends Component {
 
   async fetchCards(query) {
     let cards = [];
-    axios.get('http://jservice.io/api/clues', query)
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues', query)
       .then((response) => {
         let data = response.data;
         for (let i = 0; i < data.length; i++) {
@@ -176,7 +176,7 @@ class App extends Component {
 
   fetchAllQueriedCards(query) {
     let cards = [];
-    axios.get('http://jservice.io/api/clues', query)
+    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues', query)
       .then((response) => {
         let data = response.data;
         if (data.length > 0) {
