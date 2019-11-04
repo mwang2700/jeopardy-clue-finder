@@ -45,6 +45,8 @@ class App extends Component {
       useFiltered: 0
     };
 
+    // DiffFilteredCards represents the filtered cards for filters that aren't queried in the
+    // API call.
     this.diffFilteredCards = [];
     this.timeout = 0;
 
@@ -67,124 +69,163 @@ class App extends Component {
   }
 
   fetchCategories(currOffset) {
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/categories?offset=' + currOffset + 
-              '&count=100')
-        .then((response) =>  {
-          let category = response.data; 
-          if (currOffset <= 18400) {
-            for (let i = 0; i < category.length; i++) { 
-              this.state.allCategories.push({
-                label: category[i].title, 
-                value: category[i].id.toString()
-              });
-            }
-            this.fetchCategories(currOffset+100);
-          } 
-    });
+    try {
+      axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/categories?offset=' + currOffset + 
+                '&count=100')
+          .then((response) =>  {
+            let category = response.data; 
+            if (currOffset <= 900) {
+              // Adds all the JSON data to the allCategories array in state.
+              for (let i = 0; i < category.length; i++) { 
+                // While it's better practice to use setState here, I directly accessed/pushed on
+                // the state's allCategories here to prevent excessive re-rendering.
+                this.state.allCategories.push({
+                  label: category[i].title, 
+                  value: category[i].id.toString()
+                });
+              }
+              // Recursively calls fetchCategories to call the API for the next set of 100.
+              this.fetchCategories(currOffset+100);
+            } 
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   fetchAllCards(offset) {
-    let cards = [];
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
-      .then((response) => {
-        let data = response.data;
-        if (data.length > 0) {
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].category !== undefined) {
-              let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
-              cards.push(
-                {
-                  listener: this.addToFavorites,
-                  key: data[i].id,
-                  id: data[i].id,
-                  clue: data[i].question,
-                  category: data[i].category.title,
-                  difficulty: data[i].value,
-                  answer: removedTags,
-                  airDate: data[i].airdate
-                }
-              );
+    try {
+      let cards = [];
+      axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
+        .then((response) => {
+          let data = response.data;
+          if (data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].category !== undefined) {
+                // Since italics can't get processed, remove them.
+                let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
+                // Pushes a clue card object onto the temporary cards array
+                cards.push(
+                  {
+                    listener: this.addToFavorites,
+                    key: data[i].id,
+                    id: data[i].id,
+                    clue: data[i].question,
+                    category: data[i].category.title,
+                    difficulty: data[i].value,
+                    answer: removedTags,
+                    airDate: data[i].airdate
+                  }
+                );
+              }
             }
+            // Recursively calls to keep going
+            this.fetchAllCards(offset+100)
+            // Retrieves current cards in state, then sets state, combining the new ones on.
+            let currCards = this.state.allCards;
+            this.setState({
+                allCards: currCards.concat(cards)
+            });
           }
-          this.fetchAllCards(offset+100)
-          let currCards = this.state.allCards;
-          this.setState({
-              allCards: currCards.concat(cards)
-          });
-        }
-    });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   fetchInitialCards(offset) {
-    let cards = [];
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
-      .then((response) => {
-        let data = response.data;
-        if (offset <= 2400) {
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].category !== undefined) {
-              let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
-              cards.push(
-                {
-                  listener: this.addToFavorites,
-                  key: data[i].id,
-                  id: data[i].id,
-                  clue: data[i].question,
-                  category: data[i].category.title,
-                  difficulty: data[i].value,
-                  answer: removedTags,
-                  airDate: data[i].airdate
-                }
-              );
+    try {
+      let cards = [];
+      axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?offset=' + offset)
+        .then((response) => {
+          let data = response.data;
+          // Only renders 2500 cards, 25 api calls.
+          if (offset <= 2400) {
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].category !== undefined) {
+                // Since italics can't get processed, remove them.
+                let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
+                // Push card object onto array
+                cards.push(
+                  {
+                    listener: this.addToFavorites,
+                    key: data[i].id,
+                    id: data[i].id,
+                    clue: data[i].question,
+                    category: data[i].category.title,
+                    difficulty: data[i].value,
+                    answer: removedTags,
+                    airDate: data[i].airdate
+                  }
+                );
+              }
             }
+            // Recursively calls to keep going 
+            this.fetchInitialCards(offset+100)
+            // Retrieves current cards in state, then sets state, combining the new ones on.
+            let currCards = this.state.allCards;
+            this.setState({
+                allCards: currCards.concat(cards)
+            });
           }
-          this.fetchInitialCards(offset+100)
-          let currCards = this.state.allCards;
-          this.setState({
-              allCards: currCards.concat(cards)
-          });
-        }
-    });
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async fetchCards(query) {
-    let cards = [];
-    axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues', query)
-      .then((response) => {
-        let data = response.data;
-        for (let i = 0; i < data.length; i++) {
-          let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
-          cards.push(
-            {
-              listener: this.addToFavorites,
-              key: data[i].id,
-              id: data[i].id,
-              clue: data[i].question,
-              category: data[i].category.title,
-              difficulty: data[i].value,
-              answer: removedTags,
-              airDate: data[i].airdate
-            } 
-          );
-        }
-        this.setState({
-          filteredCards: [...cards],
+    try {
+      let cards = [];
+      // Only difference between this and regular fetchcards is that this has parameters in
+      // API call, and doesn't get called recursively (only happens once).
+      axios.get('https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues', query)
+        .then((response) => {
+          let data = response.data;
+          for (let i = 0; i < data.length; i++) {
+            let removedTags = data[i].answer.replace('<i>','').replace('</i>','');
+            cards.push(
+              {
+                listener: this.addToFavorites,
+                key: data[i].id,
+                id: data[i].id,
+                clue: data[i].question,
+                category: data[i].category.title,
+                difficulty: data[i].value,
+                answer: removedTags,
+                airDate: data[i].airdate
+              } 
+            );
+          }
+          this.setState({
+            filteredCards: [...cards],
+          });
         });
-      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   queryChanged() {
+    // In order to allow time for state to adjust (needed due to async/sync features in JS),
+    // timeout is set to 50 ms.
     setTimeout(
       function() {
+          // Resets the filtered cards since the query has changed.
           this.diffFilteredCards = [];
+          // Rebuilding a query.
           let query = {
             params: {}
           };
+          // Handles if a category is selected
           if (this.state.categoryindex !== -1) {
             query.params.category = this.state.categoryindex.toString();
           }
+          // Handles if a start date is specified. 
           let dateStart = this.state.dateStart;
-          if (dateStart !== '') {
+          let dateEnd = this.state.dateEnd;
+          // API seems to work best for dates when both are specified.
+          if (dateStart !== '' && dateEnd !== '') {
             var s = new Date(parseInt(dateStart.substring(0, 4)),
                              parseInt(dateStart.substring(5, 7)-1),
                              parseInt(dateStart.substring(8, 10)-1),
@@ -192,9 +233,6 @@ class App extends Component {
                              0,
                              0);
             query.params.min_date = s;
-          }
-          let dateEnd = this.state.dateEnd;
-          if (dateEnd !== '') {
             var e = new Date(parseInt(dateEnd.substring(0, 4)),
                              parseInt(dateEnd.substring(5, 7)-1),
                              parseInt(dateEnd.substring(8, 10)),
@@ -203,10 +241,13 @@ class App extends Component {
                              0);
             query.params.max_date = e;
           }
+          // Handles if there's a valid difficulty selection.
           if (this.state.difficulty === 0 && this.state.difficultyfield !== '') {
             query.params.value = this.state.difficultyfield;
           }
-
+          // Checks if there were queries specified. If so, indicate in the state that 
+          // the filtered array should be used later on in render. Otherwise, use
+          // allCards array in state.
           if (Object.keys(query.params).length !== 0) {
             this.setState({
               useFiltered: 1
@@ -226,6 +267,7 @@ class App extends Component {
 
   componentDidMount() {
     document.title = 'Jeopardy Clue Finder'
+    // mql listener allows sidebar to be responsive.
     mql.addListener(this.mediaQueryChanged);
     this.fetchCategories(0);
     this.fetchInitialCards(0);
@@ -254,6 +296,8 @@ class App extends Component {
     }
   }
 
+  // Handles the searchbar being changed. Receives input until the user stops typing for a 
+  // full second to prevent excessive re-rendering.
   onSearchChange = (event) => {
     event.persist();
     this.event = event;
@@ -267,6 +311,7 @@ class App extends Component {
     }, 1000);
   }
 
+  // Handles a change in category. Just updates state and updates query to call the api.
   onCategoryChange = (event) => {
     this.setState({
       categoryindex: event
@@ -274,6 +319,7 @@ class App extends Component {
     this.queryChanged();
   }
 
+  // Handles a change in difficulty. Sets state, update query.
   onDifficultyChange = (event) => {
     if (event === -1) {
       this.setState({
@@ -289,6 +335,7 @@ class App extends Component {
     }
   }
 
+  // Handles a change in difficulty search. Sets state, update query.
   onDifficultySearchChange = (event) => {
     this.setState({
       difficultyfield: event
@@ -296,6 +343,7 @@ class App extends Component {
     this.queryChanged();
   }
 
+  // Handles a change in start date. Sets state, update query.
   onStartDateChange = (event) => {
     event.persist();
     this.setState({
@@ -304,6 +352,7 @@ class App extends Component {
     this.queryChanged();
   }
 
+  // Handles a change in end date. Sets state, update query.
   onEndDateChange = (event) => {
     event.persist();
     this.setState({
@@ -312,6 +361,7 @@ class App extends Component {
     this.queryChanged();
   }
 
+  // Handles a change in difficulty dropdown. Sets state.
   onFavoritesDDChange = (event) => {
     let mode = 0;
     if (event === "View Only Favorites") {
@@ -324,6 +374,7 @@ class App extends Component {
     });
   }
 
+  // Changing the page for pagination. Triggers when another page is selected.
   changePage(data) {
     let selected = data.selected + 1;
 
@@ -332,6 +383,7 @@ class App extends Component {
     });
   }
 
+  // When a card is clicked, adds to the favorites array in state.
   addToFavorites = (id) => {
     let favs = this.state.favorites;
     if (favs.has(id)) {
@@ -345,6 +397,8 @@ class App extends Component {
   }
 
   render() { 
+    // Stores the listeners and other information into an object to be passed to the sidebar
+    // as props.
     const sidebarContentProps = {
       categoryChangeListener: this.onCategoryChange,
       difficultyChangeListener: this.onDifficultyChange,
@@ -385,6 +439,7 @@ class App extends Component {
       onSetOpen: this.onSetOpen,
     };
 
+    // Calculates necessary information for pagination.
     var indexOfLast = this.state.activePage * this.state.itemsPerPage;
     var indexOfFirst = indexOfLast - this.state.itemsPerPage;
     var pages;    
@@ -392,10 +447,15 @@ class App extends Component {
     var listOfCards = (this.state.useFiltered === 0) ? this.state.allCards : this.state.filteredCards;
     var cardRef = listOfCards;
 
+    // Filters if there's something in the search field.
     if (this.state.searchfield !== '') {
       cardRef = listOfCards.filter(item => item.clue.toLowerCase().includes(this.state.searchfield.toLowerCase())); 
     }
 
+    // Filters if either '>' or '<' is selected in difficulty.
+    // Doing three separate filters is technically faster, as doing them in one would 
+    // guarantee that three filters are done for every card, as opposed to one filter done for
+    // every, another done for some of those many, and a third done for the remaining of the many.
     if (this.state.difficultyfield !== '' && this.state.difficulty >= 1) {
       if (this.diffFilteredCards.length === 0) {
         let difficulty = parseInt(this.state.difficultyfield);
@@ -409,11 +469,15 @@ class App extends Component {
     } else {
       this.diffFilteredCards = [];
     }
+
+    // Checks whether favorites mode is on.
     if (this.state.favoritesMode === 1) {
       cardRef = cardRef.filter(item => this.state.favorites.has(item.id));
     } else if (this.state.favoritesMode === 2) {
       cardRef = cardRef.filter(item => !this.state.favorites.has(item.id));
     }
+    // Now that the intended filtered cards are known, the first page is slice off
+    // to be displayed.
     let cardsToRender = cardRef.slice(indexOfFirst, indexOfLast);
     pages = Math.max(Math.trunc(cardRef.length / this.state.itemsPerPage), 1);
 

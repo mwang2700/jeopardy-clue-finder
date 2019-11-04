@@ -2,6 +2,7 @@ import React from "react";
 import Flippy, { FrontSide, BackSide } from 'react-flippy';
 import './ClueCard.css';
 
+// Handles responsiveness of card width.
 var factor = 3;
 var marginFactor = 35;
 var viewportWidth = document.documentElement.clientWidth-350;
@@ -20,11 +21,14 @@ if (viewportWidth < 600) {
 }
 var cardWidth = viewportWidth / factor - marginFactor;
 
+// Calls listener to add to favorites.
 const onCardClick = (id, listener) => (event) => {
   listener(id);
 } 
 
 	const ClueCard = (props) => {
+    // If it was favorited, the card will have an extra line that says "Favorited".
+    // Besides that, this is just general formatting of the card.
     if (props.favorited) {
       return ( 
       <div className="ClueCard">

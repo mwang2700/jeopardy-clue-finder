@@ -48,6 +48,7 @@ class SidebarContent extends Component {
       categorySelected: ''
     }
 
+    // Initializes the optiosn that go into difficulty based on possible jeopardy points.
     this.difficultyOptions = []; 
     for (let i = 100; i <= 1000; i+=100) {
       if (i !== 700 && i !== 900) {
@@ -64,6 +65,7 @@ class SidebarContent extends Component {
     this.onFavoritesChange = this.onFavoritesChange.bind(this);
   }
 
+  // Deals with category being changed, calls listener in props.
   onCategoryChange(categorySelected) {
     this.setState({
       categorySelected
@@ -75,6 +77,7 @@ class SidebarContent extends Component {
     }
   }
 
+  // Deals with difficulty being changed, calls listener in props.
   onDifficultyChange(difficulty) {
     this.setState({
       difficulty
@@ -86,6 +89,7 @@ class SidebarContent extends Component {
     }
   }
 
+  // Deals with favorites mode being changed, calls listener in props.
   onFavoritesChange(favorites) {
     this.setState({
       favorites
@@ -97,6 +101,7 @@ class SidebarContent extends Component {
     }
   }
 
+  // Deals with load all button being pressed. Calls function in props.
   onLoadAllPress(event) {
     this.state.props.fetchAllCards(2500);
   }
@@ -112,12 +117,12 @@ class SidebarContent extends Component {
     const favoritesOptions = [{ label: "View All", value: "View All" }, 
                               { label: "View Only Favorites", value: "View Only Favorites"}, 
                               { label: "View All But Favorites", value: "View All But Favorites"}];
-
-    //const favoritesDDOptions = ["View All", "View Only Favorites", "View All But Favorites"];   
-
     const difficultyOptions = this.difficultyOptions;
+
+    // Using react-select-fast-filter, the selecting functionality won't be slow.
     const diffFilterOptions = createFilterOptions({ difficultyOptions });
     const favoritesFilterOptions = createFilterOptions({ favoritesOptions });
+    // Links will store all the JSX components being loaded in the sidebar to be returned.
     const links = [];    
 
     links.push(
@@ -126,6 +131,7 @@ class SidebarContent extends Component {
       </div>
     );
 
+    // Uses react-select optimized with fast-filter and virtualized-select for speed.
     links.push(
       <Select
         autosize = {false}

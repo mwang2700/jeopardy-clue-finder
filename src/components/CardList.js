@@ -5,6 +5,7 @@ const CardList = ({ cards, favorited }) => {
     return (
       <div>
         {
+         // Returns all the cards using JS's map(). 
          cards.map((card,i) => {
           let isFavorited = favorited.has(cards[i].id);
           return (
