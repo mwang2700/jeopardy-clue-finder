@@ -11,7 +11,7 @@ Clues will immediately begin loading and displaying.
 Initially, 2500 clues will be gradually loaded in when the pages is loaded, summing to 25 api calls to the [API](http://jservice.io/). These clues are unfiltered and will continue to load in (but not display) up to the 2,500 amount even if a filter option is selected. 
 
 ### Clue Cards
-The main panel contains the clues displayed. The clue cards are rendered in a 'flippy' component, which allows the display to flip when hovered over. The front side shows the category name, difficulty (point value), and clue name/description. The backside shows the answer to the question. If the user clicks on the backside of the card while hovering over it, that clue will be added into their temporary favorites. This temporary favorites collection is reset when the user leaves or refreshes the page.
+The main panel contains the clues displayed. The clue cards are rendered in a 'flippy' component, which allows the display to flip when hovered over. The front side shows the category name, difficulty (point value), and clue name/description. The backside shows the answer to the question. If the user clicks on the backside of the card (after it fully flips) while hovering over it, that clue will be added into their temporary favorites. This temporary favorites collection is reset when the user leaves or refreshes the page.
 
 ### Filters
 The search bar on the top allows users to filter by string of characters contained in the clue itself. For example, if I type in 'Atlanta' into the search bar, all clues that contain the word 'Atlanta' will show.
