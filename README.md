@@ -24,6 +24,8 @@ The date filter allows the user to specify a date range for which the airdate of
 
 The favorites filter allows the user to filter between viewing all cards, viewing only cards that are favorited, and viewing only cards that aren't favorited. As said earlier, favorites are cleared when the user leaves/refreshes the page.
 
+Any filter that features an API call (so using any filter except '=' in difficulty, the clue name search, or the favorites filter) will only display up to 100 cards for results. Categories typically don't have more than 10 cards within them, so this doesn't affect too much. This is done to limit api calls (see 'Why Limit API Calls').
+
 ### Load All Button
 The load all button allows all of the non-filtered cards to be loaded. This affects cards displayed when no sidebar filters are selected, or when only the difficulty filter is used with '=', since any other filter combinations causes a new api call to be made. This is only added to show that the option is possible, since getting all of the cards takes a long time and also doesn't work in the GitHub Pages version (see the 'Why Limit API Calls' section).
 
