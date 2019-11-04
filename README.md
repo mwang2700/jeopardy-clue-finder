@@ -1,68 +1,37 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Jeopardy Clue Finder
 
-## Available Scripts
+## Description
+**Jeopardy Clue Finder** is a web application that allows users to view Jeopardy trivia questions and filter by category, difficulty, date range, and clue name. In addition, users can add clues to a favorites collection, which will be temporarily saved until the page is refreshed. 
 
-In the project directory, you can run:
+## Getting Started
+The application is live on [GitHub Pages](https://mwang2700.github.io/jeopardy-clue-finder/). If the limit on API calls (see 'Why Limit API Calls') has been reached there, the application is also live on [Heroku](https://radiant-peak-34358.herokuapp.com/).
+Clues will immediately begin loading and displaying.
 
-### `npm start`
+## Functionality
+Initially, 2500 clues will be gradually loaded in when the pages is loaded, summing to 25 api calls to the [API](http://jservice.io/). These clues are unfiltered and will continue to load in (but not display) up to the 2,500 amount even if a filter option is selected. 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Clue Cards
+The main panel contains the clues displayed. The clue cards are rendered in a 'flippy' component, which allows the display to flip when hovered over. The front side shows the category name, difficulty (point value), and clue name/description. The backside shows the answer to the question. If the user clicks on the backside of the card while hovering over it, that clue will be added into their temporary favorites. This temporary favorites collection is reset when the user leaves or refreshes the page.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Filters
+The search bar on the top allows users to filter by string of characters contained in the clue itself. For example, if I type in 'Atlanta' into the search bar, all clues that contain the word 'Atlanta' will show.
 
-### `npm test`
+The category selection allows users to filter by category name. Each different category selection completes a new api call, adding on to the total number of api calls. These categories are loaded in initially when the page is opened, but while there are 185,000 categories, only 5,500 are loaded in to limit the amount of api calls being done (see the 'Why Limit API Calls' section). This amounts to only 55 api calls. 
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The difficulty filter functionality contains two options. The first is the quantifier that specifies whether the user would like to search by difficulties less than the amount, equal to the amount, or greater than the amount. The second allows users to select among the set possible jeopardy point values. Note that, for example, 'greater than or equal to' filtering can be done by doing 'greater than' the number below it.
 
-### `npm run build`
+The date filter allows the user to specify a date range for which the airdate of the clues displayed should fall under. Due to limitations of the jservice api, the user must specify at least the upper bound for this filter to work.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The favorites filter allows the user to filter between viewing all cards, viewing only cards that are favorited, and viewing only cards that aren't favorited. As said earlier, favorites are cleared when the user leaves/refreshes the page.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Load All Button
+The load all button allows all of the non-filtered cards to be loaded. This affects cards displayed when no sidebar filters are selected, or when only the difficulty filter is used with '=', since any other filter combinations causes a new api call to be made. This is only placed to allow for the option to be possible, since getting all of the cards takes a long time and also doesn't work in the GitHub Pages version (see the 'Why Limit API Calls' section).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Sidebar
+The sidebar is responsive dependent on active screen width. Once the width goes below a certain value, the sidebar will retract and can be toggled through a hamburger icon. Otherwise, the sidebar will remain docked on the left hand side. The card width is dependent on the initial screen width when the page is loaded.
 
-### `npm run eject`
+## Why Limit API Calls
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Due to the fact that jservice is http and GitHub Pages uses https, a service called [CORS Anywhere](https://cors-anywhere.herokuapp.com/) was used. Unfortunately, there's a limitation on the amount of API calls that can be made hourly with CORS Anywhere. In the scope of this being a challenge, I decided not to host CORS Anywhere on my own server, as the only user would be the person judging this. Since I didn't host it on my own server, this restriction (around 200 API calls) becomes a problem if the user wants to view all cards using the View All button. As a result, in reality, the site can only be used a limited number of times in an hour. 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+I chose to stick with CORS Anywhere regardless since I felt that it could be reasonably noted that the rest of the data could be loaded in similarly to how it was in this application (just scaled up). I didn't want users to have to enable loading unsafe scripts in their browser just to view any clue. 
