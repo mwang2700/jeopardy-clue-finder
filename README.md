@@ -4,7 +4,7 @@
 **Jeopardy Clue Finder** is a web application that allows users to view Jeopardy trivia questions and filter by category, difficulty, date range, and clue name. In addition, users can add clues to a favorites collection, which will be temporarily saved until the page is refreshed. 
 
 ## Getting Started
-The application is live on [GitHub Pages](https://mwang2700.github.io/jeopardy-clue-finder/). If the limit on API calls (see 'Why Limit API Calls') has been reached there, the application is also live on [Heroku](https://radiant-peak-34358.herokuapp.com/).
+The application is live on [GitHub Pages](https://mwang2700.github.io/jeopardy-clue-finder/). If the limit on API calls (see [Why Limit API Calls](#Why-Limit-API-Calls "Goto Why-Limit-API-Calls")) has been reached there, the application is also live on [Heroku](https://radiant-peak-34358.herokuapp.com/).
 Clues will immediately begin loading and displaying.
 
 ## Functionality
@@ -25,10 +25,10 @@ The date filter allows the user to specify a date range for which the airdate of
 
 The favorites filter allows the user to filter between viewing all cards, viewing only cards that are favorited, and viewing only cards that aren't favorited. As said earlier, favorites are cleared when the user leaves/refreshes the page.
 
-Any filter that features an API call (so using any filter except '=' in difficulty, the clue name search, or the favorites filter) will only display up to 100 cards for results. Categories typically don't have more than 10 cards within them, so this doesn't affect too much. This is done to limit api calls (see 'Why Limit API Calls').
+Any filter that features an API call (so using any filter except '=' in difficulty, the clue name search, or the favorites filter) will only display up to 100 cards for results. Categories typically don't have more than 10 cards within them, so this doesn't affect too much. This is done to limit api calls (see [Why Limit API Calls](#Why-Limit-API-Calls "Goto Why-Limit-API-Calls")).
 
 ### Load All Button
-The load all button allows all of the non-filtered cards to be loaded. This affects cards displayed when no sidebar filters are selected, or when only the difficulty filter is used with '=', since any other filter combinations causes a new api call to be made. This is only added to show that the option is possible, since getting all of the cards takes a long time and also doesn't work in the GitHub Pages version (see the 'Why Limit API Calls' section).
+The load all button allows all of the non-filtered cards to be loaded. This affects cards displayed when no sidebar filters are selected, or when only the difficulty filter is used with '=', since any other filter combinations causes a new api call to be made. This is only added to show that the option is possible, since getting all of the cards takes a long time and also doesn't work in the GitHub Pages version (see the [Why Limit API Calls](#Why-Limit-API-Calls "Goto Why-Limit-API-Calls") section).
 
 ### Sidebar
 The sidebar is responsive dependent on active screen width. Once the width goes below a certain value, the sidebar will retract and can be toggled through a hamburger icon. Otherwise, the sidebar will remain docked on the left hand side. The card width is dependent on the initial screen width when the page is loaded.
