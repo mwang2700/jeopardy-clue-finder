@@ -16,7 +16,7 @@ The main panel contains the clues displayed. The clue cards are rendered in a 'f
 ### Filters
 The search bar on the top allows users to filter by string of characters contained in the clue itself. For example, if I type in 'Atlanta' into the search bar, all clues that contain the word 'Atlanta' will show.
 
-The category selection allows users to filter by category name. Each different category selection completes a new api call, adding on to the total number of api calls. These categories are loaded in initially when the page is opened, but while there are 185,000 categories, only 5,500 are loaded in to limit the amount of api calls being done (see the 'Why Limit API Calls' section). This amounts to only 55 api calls. 
+The category selection allows users to filter by category name. Each different category selection completes a new api call, adding on to the total number of api calls. These categories start loading in initially when the page is opened, but only 1000 out of the total 18500 categories will be loaded in, amounting to 10 api calls (see 'Why Limit API Calls').
 
 The difficulty filter functionality contains two options. The first is the quantifier that specifies whether the user would like to search by difficulties less than the amount, equal to the amount, or greater than the amount. The second allows users to select among the set possible jeopardy point values. Note that, for example, 'greater than or equal to' filtering can be done by doing 'greater than' the number below it.
 
@@ -25,13 +25,13 @@ The date filter allows the user to specify a date range for which the airdate of
 The favorites filter allows the user to filter between viewing all cards, viewing only cards that are favorited, and viewing only cards that aren't favorited. As said earlier, favorites are cleared when the user leaves/refreshes the page.
 
 ### Load All Button
-The load all button allows all of the non-filtered cards to be loaded. This affects cards displayed when no sidebar filters are selected, or when only the difficulty filter is used with '=', since any other filter combinations causes a new api call to be made. This is only placed to allow for the option to be possible, since getting all of the cards takes a long time and also doesn't work in the GitHub Pages version (see the 'Why Limit API Calls' section).
+The load all button allows all of the non-filtered cards to be loaded. This affects cards displayed when no sidebar filters are selected, or when only the difficulty filter is used with '=', since any other filter combinations causes a new api call to be made. This is only added to show that the option is possible, since getting all of the cards takes a long time and also doesn't work in the GitHub Pages version (see the 'Why Limit API Calls' section).
 
 ### Sidebar
 The sidebar is responsive dependent on active screen width. Once the width goes below a certain value, the sidebar will retract and can be toggled through a hamburger icon. Otherwise, the sidebar will remain docked on the left hand side. The card width is dependent on the initial screen width when the page is loaded.
 
 ## Why Limit API Calls
 
-Due to the fact that jservice is http and GitHub Pages uses https, a service called [CORS Anywhere](https://cors-anywhere.herokuapp.com/) was used. Unfortunately, there's a limitation on the amount of API calls that can be made hourly with CORS Anywhere. In the scope of this being a challenge, I decided not to host CORS Anywhere on my own server, as the only user would be the person judging this. Since I didn't host it on my own server, this restriction (around 200 API calls) becomes a problem if the user wants to view all cards using the View All button. As a result, in reality, the site can only be used a limited number of times in an hour. 
+Due to the fact that jservice is http and GitHub Pages uses https, a service called [CORS Anywhere](https://cors-anywhere.herokuapp.com/) was used. Unfortunately, there's a limitation on the amount of API calls that can be made hourly with CORS Anywhere. In the scope of this being a challenge, I decided not to host CORS Anywhere on my own server, as the only user would be the person judging this. Since I didn't host it on my own server, this restriction becomes a problem if the user wants to view all cards using the View All button. As a result, in reality, the site can only be used a limited number of times in an hour. 
 
-I chose to stick with CORS Anywhere regardless since I felt that it could be reasonably noted that the rest of the data could be loaded in similarly to how it was in this application (just scaled up). I didn't want users to have to enable loading unsafe scripts in their browser just to view any clue. 
+I chose to stick with CORS Anywhere regardless since I felt that it could be reasonably extrapolated that the rest of the data could be loaded in similarly to how it was in this application (just scaled up). I didn't want users to have to enable loading unsafe scripts in their browser just to view any clue. 
