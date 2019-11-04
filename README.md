@@ -12,6 +12,7 @@ Initially, 2500 clues will be gradually loaded in when the pages is loaded, summ
 
 ### Clue Cards
 The main panel contains the clues displayed. The clue cards are rendered in a 'flippy' component, which allows the display to flip when hovered over. The front side shows the category name, difficulty (point value), and clue name/description. The backside shows the answer to the question. If the user clicks on the backside of the card (after it fully flips) while hovering over it, that clue will be added into their temporary favorites. This temporary favorites collection is reset when the user leaves or refreshes the page.
+Note that some information in the API is missing on certain cards. This information isn't processed out in this application (in order to accurately represent the amount of clues for certain filters), so the user may see incompleted clue cards being rendered.
 
 ### Filters
 The search bar on the top allows users to filter by string of characters contained in the clue itself. For example, if I type in 'Atlanta' into the search bar, all clues that contain the word 'Atlanta' will show.
@@ -20,7 +21,7 @@ The category selection allows users to filter by category name. Each different c
 
 The difficulty filter functionality contains two options. The first is the quantifier that specifies whether the user would like to search by difficulties less than the amount, equal to the amount, or greater than the amount. The second allows users to select among the set possible jeopardy point values. Note that, for example, 'greater than or equal to' filtering can be done by doing 'greater than' the number below it.
 
-The date filter allows the user to specify a date range for which the airdate of the clues displayed should fall under. Due to limitations of the jservice api, the user must specify at least the upper bound for this filter to work.
+The date filter allows the user to specify a date range for which the airdate of the clues displayed should fall under. The jservice api seems to work best when both dates are specified, so the user is required to enter both start and end dates for the filter to enable.
 
 The favorites filter allows the user to filter between viewing all cards, viewing only cards that are favorited, and viewing only cards that aren't favorited. As said earlier, favorites are cleared when the user leaves/refreshes the page.
 
@@ -37,3 +38,17 @@ The sidebar is responsive dependent on active screen width. Once the width goes 
 Due to the fact that jservice is http and GitHub Pages uses https, a service called [CORS Anywhere](https://cors-anywhere.herokuapp.com/) was used. Unfortunately, there's a limitation on the amount of API calls that can be made hourly with CORS Anywhere. In the scope of this being a challenge, I decided not to host CORS Anywhere on my own server, as the only user would be the person judging this. Since I didn't host it on my own server, this restriction becomes a problem if the user wants to view all cards using the View All button. As a result, in reality, the site can only be used a limited number of times in an hour. 
 
 I chose to stick with CORS Anywhere regardless since I felt that it could be reasonably extrapolated that the rest of the data could be loaded in similarly to how it was in this application (just scaled up). I didn't want users to have to enable loading unsafe scripts in their browser just to view any clue. 
+
+## Components Used
+
+* React.js
+* react-select
+* react-select-fast-filter-options
+* react-virtualized-select
+* react-flippy
+* react-js-pagination
+* react-sidebar
+* axios
+* CORS Anywhere
+
+The jeopardy clue information is retrieved from jservice.io and Jeopardy (NBC). The jeopardy logo used is also from Jeopardy (NBC)
