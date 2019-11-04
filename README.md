@@ -25,6 +25,8 @@ The date filter allows the user to specify a date range for which the airdate of
 
 The favorites filter allows the user to filter between viewing all cards, viewing only cards that are favorited, and viewing only cards that aren't favorited. As said earlier, favorites are cleared when the user leaves/refreshes the page.
 
+**Note that in many cases, favoriting a card within a certain category may be outside the range of all cards, since all cards only processes 2500 clues. Thus, if you then remove the category filter and try to filter by only favorites, it won't show up. This is (unfortuantely) the intended functionality. See [Why Limit API Calls](#Why-Limit-API-Calls "Goto Why-Limit-API-Calls")**
+
 Any filter that features an API call (so using any filter except '=' in difficulty, the clue name search, or the favorites filter) will only display up to 100 cards for results. Categories typically don't have more than 10 cards within them, so this doesn't affect too much. This is done to limit api calls (see [Why Limit API Calls](#Why-Limit-API-Calls "Goto Why-Limit-API-Calls")).
 
 ### Load All Button
