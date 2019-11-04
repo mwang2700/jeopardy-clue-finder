@@ -17,7 +17,7 @@ Note that some information in the API is missing on certain cards. This informat
 ### Filters
 The search bar on the top allows users to filter by string of characters contained in the clue itself. For example, if I type in 'Atlanta' into the search bar, all clues that contain the word 'Atlanta' will show.
 
-The category selection allows users to filter by category name. Each different category selection completes a new api call, adding on to the total number of api calls. These categories start loading in initially when the page is opened, but only 1000 out of the total 18500 categories will be loaded in, amounting to 10 api calls (see 'Why Limit API Calls').
+The category selection allows users to filter by category name. Each different category selection completes a new api call, adding on to the total number of api calls. These categories start loading in initially when the page is opened, but only 1000 out of the total 18500 categories will be loaded in, amounting to 10 api calls (see [Why Limit API Calls](#Why-Limit-API-Calls "Goto Why-Limit-API-Calls")).
 
 The difficulty filter functionality contains two options. The first is the quantifier that specifies whether the user would like to search by difficulties less than the amount, equal to the amount, or greater than the amount. The second allows users to select among the set possible jeopardy point values. Note that, for example, 'greater than or equal to' filtering can be done by doing 'greater than' the number below it.
 
