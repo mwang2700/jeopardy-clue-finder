@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/jeopardy-clue-finder/static/css/main.52e643b4.chunk.css",
-    "main.js": "/jeopardy-clue-finder/static/js/main.e2d0a26d.chunk.js",
-    "main.js.map": "/jeopardy-clue-finder/static/js/main.e2d0a26d.chunk.js.map",
+    "main.js": "/jeopardy-clue-finder/static/js/main.5115b023.chunk.js",
+    "main.js.map": "/jeopardy-clue-finder/static/js/main.5115b023.chunk.js.map",
     "runtime-main.js": "/jeopardy-clue-finder/static/js/runtime-main.478fac5e.js",
     "runtime-main.js.map": "/jeopardy-clue-finder/static/js/runtime-main.478fac5e.js.map",
     "static/css/2.2542c7b2.chunk.css": "/jeopardy-clue-finder/static/css/2.2542c7b2.chunk.css",
     "static/js/2.1364d312.chunk.js": "/jeopardy-clue-finder/static/js/2.1364d312.chunk.js",
     "static/js/2.1364d312.chunk.js.map": "/jeopardy-clue-finder/static/js/2.1364d312.chunk.js.map",
     "index.html": "/jeopardy-clue-finder/index.html",
-    "precache-manifest.02f47305a052fd47416c3b3de0711022.js": "/jeopardy-clue-finder/precache-manifest.02f47305a052fd47416c3b3de0711022.js",
+    "precache-manifest.bc9697838f559358e2e76072e682d313.js": "/jeopardy-clue-finder/precache-manifest.bc9697838f559358e2e76072e682d313.js",
     "service-worker.js": "/jeopardy-clue-finder/service-worker.js",
     "static/css/2.2542c7b2.chunk.css.map": "/jeopardy-clue-finder/static/css/2.2542c7b2.chunk.css.map",
     "static/css/main.52e643b4.chunk.css.map": "/jeopardy-clue-finder/static/css/main.52e643b4.chunk.css.map"
@@ -19,6 +19,6 @@
     "static/css/2.2542c7b2.chunk.css",
     "static/js/2.1364d312.chunk.js",
     "static/css/main.52e643b4.chunk.css",
-    "static/js/main.e2d0a26d.chunk.js"
+    "static/js/main.5115b023.chunk.js"
   ]
 }

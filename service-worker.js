@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/jeopardy-clue-finder/precache-manifest.02f47305a052fd47416c3b3de0711022.js"
+  "/jeopardy-clue-finder/precache-manifest.bc9697838f559358e2e76072e682d313.js"
 );
 
 self.addEventListener('message', (event) => {
